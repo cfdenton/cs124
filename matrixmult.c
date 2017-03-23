@@ -13,8 +13,9 @@ int regular_mult(val_t *a, val_t *b, val_t *res, long n) {
     for (long j = 0; j < n; j++) {
         for (long i = 0; i < n; i++) {
             for (long k = 0; k < n; k++) {
-                r += get(a, i, k) * get(b, k, j);
+                r += get(a, i, k, n) * get(b, k, j, n);
             }
+            put(res, i, j, n, r);
         }
     }
     return 0;

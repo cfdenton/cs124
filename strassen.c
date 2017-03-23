@@ -36,6 +36,8 @@ int main() {
     print_matrix(matrix2, n);
 
     val_t *result = malloc(n * sizeof(val_t));
+    regular_mult(matrix1, matrix2, result, n);
+    print_matrix(result, n);
     return 0;
 }
 
