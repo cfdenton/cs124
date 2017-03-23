@@ -8,11 +8,15 @@
 typedef int val_t;
 
 struct matrix {
+    long n;
     long off_i;
     long off_j;
-    long n;
     val_t *m;
 };
+
+struct matrix *init(long n, long off_i, long off_j, val_t *m);
+struct matrix *init_blank(long n);
+struct matrix *init_rand(long n, long entry_lim);
 
 val_t get(struct matrix *matrix, long i, long j);
 void put(struct matrix *matrix, long i, long j, val_t new_val);
