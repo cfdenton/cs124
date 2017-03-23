@@ -7,8 +7,18 @@
 
 typedef int val_t;
 
-val_t get(val_t *matrix, long i, long j, long n);
-void put(val_t *matrix, long i, long j, long n, val_t new_val);
+struct matrix {
+    long off_i;
+    long off_j;
+    long n;
+    val_t *m;
+};
 
-int strassen_mult(val_t *a, val_t *b, val_t *res, long n);
-int regular_mult(val_t *a, val_t *b, val_t *res, long n);
+val_t get(struct matrix *matrix, long i, long j);
+void put(struct matrix *matrix, long i, long j, val_t new_val);
+void add(struct matrix *matrix, long i, long j, val_t add_val);
+
+int strassen_mult(struct matrix *a, struct matrix *b, struct matrix *res);
+int regular_mult(struct matrix *a, struct matrix *b, struct matrix *res);
+
+void add_matrix(struct matrix *matrix1, struct matrix *matrix2, struct matrix *res);
