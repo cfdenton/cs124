@@ -1,7 +1,34 @@
+#include <stdlib.h>
 #include <assert.h>
 #include "strassen.h"
 
-void init(long off_i, long off_j, val_t *m);
+struct matrix *init(long n, long off_i, long off_j, val_t *m) {
+    struct matrix *matrix = (struct matrix *) malloc(sizeof(struct matrix));
+    
+    matrix->n = n;
+    matrix->off_i = off_i;
+    matrix->off_j = off_j;
+    matrix->m = m;
+    return matrix;
+}
+
+struct matrix *init_blank(long n) {
+    struct matrix *m = init(n, 0, 0, NULL);
+    m->m = (val_t *) malloc(n * n * sizeof(val_t));
+    return m;
+}
+
+struct matrix *init_rand(long n, long entry_lim) {
+    val_t add;
+    struct matrix *m = init_blank(n);
+    for (long i = 0; i < m->n; i++) {
+        for (long j = 0; j < m->n; j++) {
+            add = (val_t) rand() % entry_lim;
+            put(m, i, j, add);
+        }
+    }
+    return m;
+}
 
 /* 
  * get the value at row i, column j, in matrix of size n
