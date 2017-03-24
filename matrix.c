@@ -70,20 +70,23 @@ void add_matrix(struct matrix *a, struct matrix *b, struct matrix *res) {
     }
 }
 
-val_t *create(long n) {
-
+struct matrix *create(long n) {
+	
 	FILE* file = fopen("file.csv", "r");
-	val_t *array = malloc(n*n*sizeof(val_t));
-
+	struct matrix *matrix = init_blank(n);
 	long counter = 0;
 	val_t x;
 
-	while(fscanf(file, "%d", &x) != EOF) {
-		fscanf(file, "%d", &x);
-		long i = n % counter;
-		long j = n / counter;
-		put(array, i, j, n, x);
+	while(counter < n*n) {
+		if (fscanf(file, "%d", &x) == EOF) {
+			printf("Too few numbers in file.\n");
+			break;
+		}
+		long i = counter / n;
+		long j = counter % n;
+		put(matrix, i, j, x);
 		counter++;
 	}
-	return array;
+	return matrix;
 }
+

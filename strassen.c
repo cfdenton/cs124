@@ -11,7 +11,7 @@ void print_matrix(struct matrix *matrix);
 int main() {
     srand(time(NULL));
 
-    long n = 3;
+    long n = 4;
     struct matrix *matrix1 = init_rand(n, ENTRY_LIM);
     print_matrix(matrix1);
     struct matrix *matrix2 = init_rand(n, ENTRY_LIM);
@@ -20,7 +20,11 @@ int main() {
     struct matrix *result = init_blank(n);
     regular_mult(matrix1, matrix2, result);
     print_matrix(result);
+
+    struct matrix *test = create(n);
+    print_matrix(test);
     return 0;
+
 }
 
 void print_matrix(struct matrix *matrix) {
