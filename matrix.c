@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #include <assert.h>
 #include "strassen.h"
@@ -123,23 +124,35 @@ void print_matrix(struct matrix *matrix) {
     printf("\n");
 }
 
-struct matrix *create(long n) {
-	
-	FILE* file = fopen("file.csv", "r");
-	struct matrix *matrix = init_blank(n);
-	long counter = 0;
-	val_t x;
+void print_diag(struct matrix *matrix) {
+    for (long i = 0; i < matrix->subn; i++) {
+        printf("%d\n", get(matrix, i, i));
+    }
+}
 
-	while(counter < n*n) {
-		if (fscanf(file, "%d", &x) == EOF) {
-			printf("Too few numbers in file.\n");
-			break;
-		}
-		long i = counter / n;
-		long j = counter % n;
-		put(matrix, i, j, x);
-		counter++;
-	}
-	return matrix;
+void fill(const char *filename, struct matrix *matrix1, 
+        struct matrix *matrix2, long n) 
+{
+    FILE* file = fopen(filename, "r");
+    val_t x;
+
+    for (long i = 0; i < n; i++) {
+        for (long j = 0; j < n; j++) {
+            if (fscanf(file, "%d", &x) == EOF) {
+                printf("Too few numbers in file.\n");
+                break;
+            }
+            put(matrix1, i, j, x);
+        }
+    }
+    for (long i = 0; i < n; i++) {
+        for (long j = 0; j < n; j++) {
+            if (fscanf(file, "%d", &x) == EOF) {
+                printf("Too few numbers in file.\n");
+                break;
+            }
+            put(matrix2, i, j, x);
+        }
+    }
 }
 
