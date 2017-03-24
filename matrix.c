@@ -5,6 +5,8 @@
 #include "strassen.h"
 
 struct matrix *init(struct matrix *matrix, long n, long subn, long off_i, long off_j, val_t *m) {
+    if (!matrix)
+        matrix = (struct matrix *) malloc(sizeof(struct matrix));
     matrix->n = n;
     matrix->subn = subn;
     matrix->off_i = off_i;

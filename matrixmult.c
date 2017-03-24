@@ -77,18 +77,18 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
         subn = a->subn/2;
    
     /* initialize submatrices */
-    struct matrix *a11 = init(alloc[depth], a->n, subn, a->off_i, a->off_j, a->m);
-    struct matrix *a12 = init(alloc[depth] + 1, a->n, subn, a->off_i, a->off_j + subn, a->m);
-    struct matrix *a21 = init(alloc[depth] + 2, a->n, subn, a->off_i + subn, a->off_j, a->m);
-    struct matrix *a22 = init(alloc[depth] + 3, a->n, subn, a->off_i + subn, a->off_j + subn, a->m);
-    struct matrix *b11 = init(alloc[depth] + 4, b->n, subn, b->off_i, b->off_j, b->m);
-    struct matrix *b12 = init(alloc[depth] + 5, b->n, subn, b->off_i, b->off_j + subn, b->m);
-    struct matrix *b21 = init(alloc[depth] + 6, b->n, subn, b->off_i + subn, b->off_j, b->m);
-    struct matrix *b22 = init(alloc[depth] + 7, b->n, subn, b->off_i + subn, b->off_j + subn, b->m);
-    struct matrix *c11 = init(alloc[depth] + 8, c->n, subn, c->off_i, c->off_j, c->m);
-    struct matrix *c12 = init(alloc[depth] + 9, c->n, subn, c->off_i, c->off_j + subn, c->m);
-    struct matrix *c21 = init(alloc[depth] + 10, c->n, subn, c->off_i + subn, c->off_j, c->m);
-    struct matrix *c22 = init(alloc[depth] + 11, c->n, subn, c->off_i + subn, c->off_j + subn, c->m);
+    struct matrix *a11 = init(NULL, a->n, subn, a->off_i, a->off_j, a->m);
+    struct matrix *a12 = init(NULL, a->n, subn, a->off_i, a->off_j + subn, a->m);
+    struct matrix *a21 = init(NULL, a->n, subn, a->off_i + subn, a->off_j, a->m);
+    struct matrix *a22 = init(NULL, a->n, subn, a->off_i + subn, a->off_j + subn, a->m);
+    struct matrix *b11 = init(NULL, b->n, subn, b->off_i, b->off_j, b->m);
+    struct matrix *b12 = init(NULL, b->n, subn, b->off_i, b->off_j + subn, b->m);
+    struct matrix *b21 = init(NULL, b->n, subn, b->off_i + subn, b->off_j, b->m);
+    struct matrix *b22 = init(NULL, b->n, subn, b->off_i + subn, b->off_j + subn, b->m);
+    struct matrix *c11 = init(NULL, c->n, subn, c->off_i, c->off_j, c->m);
+    struct matrix *c12 = init(NULL, c->n, subn, c->off_i, c->off_j + subn, c->m);
+    struct matrix *c21 = init(NULL, c->n, subn, c->off_i + subn, c->off_j, c->m);
+    struct matrix *c22 = init(NULL, c->n, subn, c->off_i + subn, c->off_j + subn, c->m);
 
     /* the first four buffers are for the intermediate 'm' matrices */
     struct matrix *buf1 = init_blank(subn);
