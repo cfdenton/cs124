@@ -77,18 +77,18 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
         subn = a->subn/2;
    
     /* initialize submatrices */
-    struct matrix *a11 = init(alloc[depth], a->n, subn, a->off_i, a->off_j, a->m);
-    struct matrix *a12 = init(alloc[depth] + 1, a->n, subn, a->off_i, a->off_j + subn, a->m);
-    struct matrix *a21 = init(alloc[depth] + 2, a->n, subn, a->off_i + subn, a->off_j, a->m);
-    struct matrix *a22 = init(alloc[depth] + 3, a->n, subn, a->off_i + subn, a->off_j + subn, a->m);
-    struct matrix *b11 = init(alloc[depth] + 4, b->n, subn, b->off_i, b->off_j, b->m);
-    struct matrix *b12 = init(alloc[depth] + 5, b->n, subn, b->off_i, b->off_j + subn, b->m);
-    struct matrix *b21 = init(alloc[depth] + 6, b->n, subn, b->off_i + subn, b->off_j, b->m);
-    struct matrix *b22 = init(alloc[depth] + 7, b->n, subn, b->off_i + subn, b->off_j + subn, b->m);
-    struct matrix *c11 = init(alloc[depth] + 8, c->n, subn, c->off_i, c->off_j, c->m);
-    struct matrix *c12 = init(alloc[depth] + 9, c->n, subn, c->off_i, c->off_j + subn, c->m);
-    struct matrix *c21 = init(alloc[depth] + 10, c->n, subn, c->off_i + subn, c->off_j, c->m);
-    struct matrix *c22 = init(alloc[depth] + 11, c->n, subn, c->off_i + subn, c->off_j + subn, c->m);
+    struct matrix *a11 = init(NULL, a->n, subn, a->off_i, a->off_j, a->m);
+    struct matrix *a12 = init(NULL, a->n, subn, a->off_i, a->off_j + subn, a->m);
+    struct matrix *a21 = init(NULL, a->n, subn, a->off_i + subn, a->off_j, a->m);
+    struct matrix *a22 = init(NULL, a->n, subn, a->off_i + subn, a->off_j + subn, a->m);
+    struct matrix *b11 = init(NULL, b->n, subn, b->off_i, b->off_j, b->m);
+    struct matrix *b12 = init(NULL, b->n, subn, b->off_i, b->off_j + subn, b->m);
+    struct matrix *b21 = init(NULL, b->n, subn, b->off_i + subn, b->off_j, b->m);
+    struct matrix *b22 = init(NULL, b->n, subn, b->off_i + subn, b->off_j + subn, b->m);
+    struct matrix *c11 = init(NULL, c->n, subn, c->off_i, c->off_j, c->m);
+    struct matrix *c12 = init(NULL, c->n, subn, c->off_i, c->off_j + subn, c->m);
+    struct matrix *c21 = init(NULL, c->n, subn, c->off_i + subn, c->off_j, c->m);
+    struct matrix *c22 = init(NULL, c->n, subn, c->off_i + subn, c->off_j + subn, c->m);
 
     /* the first four buffers are for the intermediate 'm' matrices */
     struct matrix *buf1 = init_blank(subn);
@@ -100,7 +100,6 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
     struct matrix *buf5 = init_blank(subn);
     struct matrix *buf6 = init_blank(subn);
 
-    printf("here 1\n");
     /* To compute c11, compute m1 m4 m5 m7 */
     /* m1 */
 
@@ -108,7 +107,6 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
     add_matrix(b11, b22, buf6);
     switch_mult(buf5, buf6, buf1, alloc, depth+1);
 
-    printf("here 2\n");
     /* m4 */
     subtract_matrix(b21, b11, buf6);
     switch_mult(a22, buf6, buf2, alloc, depth+1);
@@ -117,7 +115,6 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
     add_matrix(a11, a12, buf5);
     switch_mult(buf5, b22, buf3, alloc, depth+1);
 
-    printf("here 3\n");
     /* m7 */
     subtract_matrix(a12, a22, buf5);
     add_matrix(b21, b22, buf6);
@@ -128,7 +125,6 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
     subtract_matrix(c11, buf3, c11);
     add_matrix(c11, buf4, c11);
 
-    printf("here 4\n");
     /* To compute c12, overwrite m7: m1 m4 m5 m3 */
     subtract_matrix(b12, b22, buf6);
     switch_mult(a11, buf6, buf4, alloc, depth+1);
@@ -140,7 +136,6 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
     add_matrix(a21, a22, buf5);
     switch_mult(buf5, b11, buf3, alloc, depth+1);
 
-    printf("here 5\n");
     /* c21 */
     add_matrix(buf2, buf3, c21);
 
@@ -154,7 +149,6 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
     add_matrix(c22, buf4, c22);
     add_matrix(c22, buf2, c22);
 
-    printf("here 6\n");
     destroy_matrix(buf1);
     destroy_matrix(buf2);
     destroy_matrix(buf3);

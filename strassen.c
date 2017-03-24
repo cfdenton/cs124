@@ -11,7 +11,7 @@ void print_matrix(struct matrix *matrix);
 int main() {
     srand(time(NULL));
 
-    long n = 4;
+    long n = 7;
     struct matrix *matrix1 = init_rand(n, ENTRY_LIM);
     print_matrix(matrix1);
     struct matrix *matrix2 = init_rand(n, ENTRY_LIM);
@@ -26,9 +26,8 @@ int main() {
    
     print_matrix(result1);
     print_matrix(result2);
-    //print_matrix(diff);
+    print_matrix(diff);
     return 0;
-
 }
 
 
