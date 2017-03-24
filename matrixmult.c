@@ -119,8 +119,8 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
 
     add_matrix(a11, a22, buf5);
     add_matrix(b11, b22, buf6);
+    switch_mult(buf5, buf6, buf1);
 
-    // switch_mult here??
     /* m4 */
     subtract_matrix(b21, b11, buf6);
     switch_mult(a22, buf6, buf2, alloc, alloc2, depth+1);
@@ -163,12 +163,12 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
     add_matrix(c22, buf4, c22);
     add_matrix(c22, buf2, c22);
 
-    //destroy_matrix(buf1);
-    //destroy_matrix(buf2);
-    //destroy_matrix(buf3);
-    //destroy_matrix(buf4);
-    //destroy_matrix(buf5);
-    //destroy_matrix(buf6);
+    destroy_matrix(buf1);
+    destroy_matrix(buf2);
+    destroy_matrix(buf3);
+    destroy_matrix(buf4);
+    destroy_matrix(buf5);
+    destroy_matrix(buf6);
 
     return 0;
 }
