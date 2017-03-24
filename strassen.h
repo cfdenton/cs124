@@ -29,6 +29,7 @@ void destroy_matrix(struct matrix *mat);
 val_t get(struct matrix *matrix, long i, long j);
 void put(struct matrix *matrix, long i, long j, val_t new_val);
 void add(struct matrix *matrix, long i, long j, val_t add_val);
+struct matrix *create(long n);
 
 int regular_mult(struct matrix *a, struct matrix *b, struct matrix *res);
 int strassen_mult(struct matrix *a, struct matrix *b, struct matrix *res);

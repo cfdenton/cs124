@@ -3,6 +3,8 @@
 #include <math.h>
 #include <assert.h>
 #include "strassen.h"
+#include "stdio.h"
+#include "stdlib.h"
 
 struct matrix *init(struct matrix *matrix, long n, long subn, long off_i, long off_j, val_t *m) {
     matrix->n = n;
@@ -118,3 +120,24 @@ void print_matrix(struct matrix *matrix) {
     }
     printf("\n");
 }
+
+struct matrix *create(long n) {
+	
+	FILE* file = fopen("file.csv", "r");
+	struct matrix *matrix = init_blank(n);
+	long counter = 0;
+	val_t x;
+
+	while(counter < n*n) {
+		if (fscanf(file, "%d", &x) == EOF) {
+			printf("Too few numbers in file.\n");
+			break;
+		}
+		long i = counter / n;
+		long j = counter % n;
+		put(matrix, i, j, x);
+		counter++;
+	}
+	return matrix;
+}
+
