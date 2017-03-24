@@ -105,7 +105,8 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
     struct matrix *c12 = init(alloc[depth] + 9, c->n, subn, c->off_i, c->off_j + subn, c->m);
     struct matrix *c21 = init(alloc[depth] + 10, c->n, subn, c->off_i + subn, c->off_j, c->m);
     struct matrix *c22 = init(alloc[depth] + 11, c->n, subn, c->off_i + subn, c->off_j + subn, c->m);
-
+    printf("a11\n");
+    print_matrix(a11);
     /* the first four buffers are for the intermediate 'm' matrices */
     struct matrix *buf1 = init(alloc2[depth], subn, subn, 0, 0, alloc2[depth][0].m);
     struct matrix *buf2 = init(alloc2[depth] + 1, subn, subn, 0, 0, alloc2[depth][1].m);
@@ -113,12 +114,7 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
     struct matrix *buf4 = init(alloc2[depth] + 3, subn, subn, 0, 0, alloc2[depth][3].m);
     struct matrix *buf5 = init(alloc2[depth] + 4, subn, subn, 0, 0, alloc2[depth][4].m);
     struct matrix *buf6 = init(alloc2[depth] + 5, subn, subn, 0, 0, alloc2[depth][5].m);
-    memset(buf1->m, 0, sizeof(val_t)*subn*subn);
-    memset(buf2->m, 0, sizeof(val_t)*subn*subn);
-    memset(buf3->m, 0, sizeof(val_t)*subn*subn);
-    memset(buf4->m, 0, sizeof(val_t)*subn*subn);
-    memset(buf5->m, 0, sizeof(val_t)*subn*subn);
-    memset(buf6->m, 0, sizeof(val_t)*subn*subn);
+
 
     /* To compute c11, compute m1 m4 m5 m7 */
     /* m1 */
@@ -127,6 +123,9 @@ int strassen_subroutine(struct matrix *a, struct matrix *b, struct matrix *c,
     add_matrix(b11, b22, buf6);
 
     switch_mult(buf5, buf6, buf1, alloc, alloc2, depth+1);
+    printf("m1\n");
+    print_matrix(buf1);
+
 
     /* m4 */
     subtract_matrix(b21, b11, buf6);
