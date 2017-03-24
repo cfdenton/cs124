@@ -4,8 +4,7 @@
  * Carl Denton and Menaka Narayanan
  */
 
-#define SWITCH_THRESH 1 
-#define NUM_ALLOC 12
+#define SWITCH_THRESH 36 
 
 typedef int val_t;
 
@@ -20,6 +19,7 @@ struct matrix {
 
 struct matrix *init(struct matrix *matrix, long n, long subn, long off_i, long off_j, val_t *m);
 struct matrix *init_blank(long n);
+struct matrix *init_report(long n, struct matrix *m);
 struct matrix *init_rand(long n, long entry_lim);
 struct matrix *init_blank_padded(long n);
 struct matrix *pad_matrix(struct matrix *matrix);

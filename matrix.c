@@ -16,10 +16,17 @@ struct matrix *init(struct matrix *matrix, long n, long subn, long off_i, long o
 }
 
 struct matrix *init_blank(long n) {
-    struct matrix *m = (struct matrix *) malloc(sizeof(struct matrix));
-    init(m, n, n, 0, 0, NULL);
+    struct matrix *m = init(NULL, n, n, 0, 0, NULL);
     m->m = (val_t *) calloc(n * n, sizeof(val_t));
     return m;
+}
+
+struct matrix *init_report(long n, struct matrix *m) {
+    struct matrix *matrix = init(NULL, n, n, 0, 0, NULL);
+    printf("m subn %ld\n", m->subn);
+    matrix->m = (val_t *) calloc(n * n, sizeof(val_t));
+    printf("m subn %ld\n", m->subn);
+    return matrix;
 }
 
 
@@ -103,8 +110,8 @@ void copy_matrix(struct matrix *a, struct matrix *b) {
 }
 
 void subtract_matrix(struct matrix *a, struct matrix *b, struct matrix *res) {
-    for (long i = 0; i < a->n; i++) {
-        for (long j = 0; j < a->n; j++) {
+    for (long i = 0; i < a->subn; i++) {
+        for (long j = 0; j < a->subn; j++) {
             put(res, i, j, get(a, i, j) - get(b, i, j));
         }
     }
