@@ -155,9 +155,9 @@ def main(args):
     arr = generate_random(size)
     print("array: " + str(arr))
     repeated_random(arr)
-    hill_climbing(arr)
-    simulated_annealing(arr)
-    kk(arr)
+    # hill_climbing(arr)
+    # simulated_annealing(arr)
+    # kk(arr)
 
 
 if __name__ == '__main__':
