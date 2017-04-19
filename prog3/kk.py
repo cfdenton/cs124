@@ -4,11 +4,14 @@ from datetime import datetime
 import numpy as np
 import math
 
-maxnum = 100
-maxiter = 1000
+maxnum = pow(10, 12) 
+maxiter = 25000
+size = 100 
+
 
 
 def kk(arr):
+    m = math.inf
     n = len(arr)
     nonzero = 0
     for i in range(n):
@@ -41,7 +44,7 @@ def kk(arr):
     for i in arr:
         if i > res:
             res = i
-    print("KK algorithm residue: " + str(res))
+    #print("KK algorithm residue: " + str(res))
     return res
 
 
@@ -54,7 +57,7 @@ def repeated_random(arr):
         if residue(arr, sprime) < residue(arr, s):
             s = sprime[:]
 
-    print("repeated random residue: " + str(residue(arr, s)))
+    #print("repeated random residue: " + str(residue(arr, s)))
     return s
         
 
@@ -70,10 +73,14 @@ def hill_climbing(arr):
         if residue(arr, sprime) < residue(arr, s):
             s = sprime[:]
 
-    print("hill climbing residue: " + str(residue(arr, s)))
+    #print("hill climbing residue: " + str(residue(arr, s)))
     return s
 
 def simulated_annealing(arr):
+    def anneal(arr, s, sp, i):
+        def temp(i):
+            return pow(10, 10)*pow(0.8, math.floor(i/300))
+        return math.exp(-(residue(arr, sp) - residue(arr, s))/temp(i))
     n = len(arr)
     s = rand_sol(n)
     spp = s[:]
@@ -87,13 +94,24 @@ def simulated_annealing(arr):
         if residue(arr, s) < residue(arr, spp):
             spp = s[:]
 
-    print("simulated annealing residue: " + str(residue(arr, spp)))
+    #print("simulated annealing residue: " + str(residue(arr, spp)))
     return spp
         
-def anneal(arr, s, sp, i):
-    def temp(i):
-        return pow(10, 10)*pow(0.8, math.floor(i/300))
-    return math.exp(-(residue(arr, sp) - residue(arr, s))/temp(i))
+def prep_repeated_random(arr):
+    n = len(arr)
+    s = rand_part(n)
+
+    for i in range(maxiter):
+        if i % 100 == 0:
+            print("iteration " + str(i))
+        sprime = rand_part(n)
+        if residue_part(arr, sprime) < residue_part(arr, s):
+            s = sprime[:]
+
+    #print("repeated random residue: " + str(residue_part(arr, s)))
+    print("residue " + str(s))
+    return s
+
 
 def rand_sol(n):
     arr = []
@@ -120,8 +138,11 @@ def rand_neighbor(sol):
         sprime[k] *= -1
     return sprime
    
-
-
+def rand_part(n):
+    arr = []
+    for i in range(n):
+        arr.append(random.randint(1, n))
+    return arr
 
 def residue(arr, sol):
     res = 0
@@ -129,6 +150,20 @@ def residue(arr, sol):
         res += arr[i] * sol[i]
     return abs(res)
 
+def residue_part(arr, part):
+    n = len(arr)
+    new_arr = apply_part(arr, part)
+    return kk(new_arr)
+
+def apply_part(arr, part):
+    n = len(arr)
+    new_arr = [0 for i in range(n)]
+    #print("partitioning " + str(arr) + " with partition " + str(part))
+    for i in range(n):
+        new_arr[part[i]-1] += arr[i]
+
+    #print("applied: " + str(new_arr))
+    return new_arr
 
 def generate_random(n):
     arr = []
@@ -150,14 +185,17 @@ def many_random(size, num):
 def main(args):
     random.seed(datetime.now())
 
-    size = 100 
-    num = 10
+    num = 5 
     arr = generate_random(size)
-    print("array: " + str(arr))
-    repeated_random(arr)
-    hill_climbing(arr)
-    simulated_annealing(arr)
-    kk(arr)
+    #print("array: " + str(arr))
+    #part = rand_part(size)
+    #print("partition: " + str(part))
+    #arr = apply_part(arr, part)
+    #repeated_random(arr)
+    #hill_climbing(arr)
+    #simulated_annealing(arr)
+    #kk(arr)
+    prep_repeated_random(arr)
 
 
 if __name__ == '__main__':
