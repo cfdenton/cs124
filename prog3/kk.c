@@ -5,9 +5,10 @@
 #include <string.h>
 #include <math.h>
 
-#define maxnum 1000000000000
-#define n 100 
-#define maxiter 25000
+#define repetitions 100
+#define maxnum 1000000000000 
+#define n 100
+#define maxiter 25000 
 
 uint64_t rand_uint64_t();
 void print_arr(uint64_t *arr);
@@ -61,11 +62,15 @@ uint64_t simulated_annealing(uint64_t *arr) {
     memcpy(spp, s, n * sizeof(int));
     int *sp;
     double anneal, temp;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < maxiter; i++) {
         sp = rand_neighbor(s);
         
-        temp = pow(10., 10.) * pow(0.8, floor((double) i/300.));
+        temp = pow(10., 10.) * pow(0.8, floor(((double) i)/300.));
+        //printf("temp 0 %f\n", (double) i);
+        //printf("temp 1 %f\n", floor(((double) i) / 300.));
+        //printf("temp %f\n", temp);
         anneal = exp(-(residue(arr, sp) - residue(arr, s))/temp);
+        //printf("anneal %f\n", anneal);
         if (residue(arr, sp) < residue(arr, s)) {
             memcpy(s, sp, n * sizeof(int));
         } else if ((double) rand() / RAND_MAX < anneal) {
@@ -119,7 +124,7 @@ uint64_t prep_simulated_annealing(uint64_t *arr) {
     memcpy(spp, s, n * sizeof(int));
     int *sp;
     double anneal, temp;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < maxiter; i++) {
         sp = rand_part_neighbor(s);
         
         temp = pow(10., 10.) * pow(0.8, floor((double) i/300.));
@@ -150,10 +155,20 @@ uint64_t kk(uint64_t *arr) {
     
     int i, j;
     while (nonzero > 1) {
-        i = rand() % n;
-        j = rand() % (n-1);
-        if (j >= i) {
-            j++;
+        i = 0;
+        j = 1;
+        for (int k = 2; k < n; k++) {
+            if (arr[k] > arr[i] && arr[k] <= arr[j]) {
+                i = k;
+            } else if (arr[k] > arr[j] && arr[k] <= arr[i]) {
+                j = k;
+            } else if (arr[k] > arr[i] && arr[k] > arr[j]) {
+                if (arr[i] > arr[j]) {
+                    j = k;
+                } else {
+                    i = k;
+                }
+            }
         }
 
         if (arr[i] > arr[j]) {
@@ -173,7 +188,6 @@ uint64_t kk(uint64_t *arr) {
             arr[j] = 0;
             nonzero -= 2;
         }
-        //print_arr(arr);
     }
 
     uint64_t max = 0;
@@ -260,6 +274,10 @@ int *rand_part_neighbor(int *p) {
             break;
         }
     }
+    //printf("original: ");
+    //print_sol(p);
+    //printf("neighbor: ");
+    //print_sol(pp);
     return pp;
 }
 
@@ -269,7 +287,8 @@ uint64_t part_residue(uint64_t *arr, int *p) {
     for (int i = 0; i < n; i++) {
         new_arr[p[i]] += arr[i];
     }
-    return kk(new_arr);
+    uint64_t result = kk(new_arr);
+    return result; 
 }
 
 
@@ -311,8 +330,12 @@ void print_sol(int *s) {
 }
 
 uint64_t rand_uint64_t() {
-    return (((uint64_t) rand()) << 32) | ((uint64_t) rand());
-    return 0;
+    uint64_t r = 0;
+    r |= ((uint64_t) rand() & 0xFFFF) << 48;
+    r |= ((uint64_t) rand() & 0xFFFF) << 32;
+    r |= ((uint64_t) rand() & 0xFFFF) << 16;
+    r |= ((uint64_t) rand() & 0xFFFF);
+    return r;
 }
 
 
@@ -320,13 +343,41 @@ uint64_t rand_uint64_t() {
 int main(void) {
     srand(time(NULL));
     printf("seeded\n");
-    uint64_t *arr = generate_random();
-    print_arr(arr);
-    printf("repeated random: %llu\n", repeated_random(arr));
-    printf("hill climbing: %llu\n", hill_climbing(arr));
-    printf("simulated annealing: %llu\n", simulated_annealing(arr));
-    printf("prep repeated random: %llu\n", prep_repeated_random(arr));
-    printf("prep hill climbing: %llu\n", prep_hill_climbing(arr));
-    printf("prep simulated annealing: %llu\n", prep_simulated_annealing(arr));
-    printf("kk: %llu\n", kk(arr));
+    //uint64_t *arr = generate_random();
+    //print_arr(arr);
+    //printf("repeated random: %llu\n", repeated_random(arr));
+    //printf("hill climbing: %llu\n", hill_climbing(arr));
+    //printf("simulated annealing: %llu\n", simulated_annealing(arr));
+    //printf("prep repeated random: %llu\n", prep_repeated_random(arr));
+    //printf("prep hill climbing: %llu\n", prep_hill_climbing(arr));
+    //printf("prep simulated annealing: %llu\n", prep_simulated_annealing(arr));
+    //printf("kk: %llu\n", kk(arr));
+
+    uint64_t rr = 0;
+    uint64_t hc = 0;
+    uint64_t sa = 0;
+    uint64_t prr = 0; 
+    uint64_t phc = 0; 
+    uint64_t psa = 0; 
+    uint64_t kk_ave = 0;
+    uint64_t *arr;
+    for (int i = 0; i < repetitions; i++) {
+        arr = generate_random();
+        rr += repeated_random(arr);
+        hc += hill_climbing(arr);
+        sa += simulated_annealing(arr);
+        prr += prep_repeated_random(arr);
+        phc += prep_hill_climbing(arr);
+        psa += prep_simulated_annealing(arr);
+        kk_ave += kk(arr);
+        printf("finished iteration %d\n", i);
+    }
+    printf("repeated random: %f\n", (double) rr / (double) repetitions);
+    printf("hill climbing: %f\n", (double) hc / (double) repetitions);
+    printf("simulated annealing: %f\n", (double) sa / (double) repetitions);
+    printf("prep repeated random: %f\n", (double) prr / (double) repetitions);
+    printf("prep hill climbing: %f\n", (double) phc / (double) repetitions);
+    printf("prep simulated annealing: %f\n", (double) psa / (double) repetitions);
+    printf("kk: %f\n", (double) kk_ave / (double) repetitions);
+
 }
